@@ -13,18 +13,18 @@ export var AvgScoreData = {
   ],
 
   last_year:[
-    {score: 'Avg. Saftey Score', value: 82},
-    {score: 'Remaining Score', value: 18}
+    {score: 'Avg. Saftey Score', value: 50},
+    {score: 'Remaining Score', value: 50}
   ],
 
   last_month:[
-    {score: 'Avg. Saftey Score', value: 81.6},
-    {score: 'Remaining Score', value: 18.4}
+    {score: 'Avg. Saftey Score', value: 8},
+    {score: 'Remaining Score', value: 92}
   ],
 
   last_week:[
-    {score: 'Avg. Saftey Score', value: 79},
-    {score: 'Remaining Score', value: 21}
+    {score: 'Avg. Saftey Score', value: 99},
+    {score: 'Remaining Score', value: 1}
   ],
 
   today:[

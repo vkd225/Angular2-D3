@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
+import { CommonService } from '../common.service';
 
 import * as d3 from 'd3-selection';
 import * as d3Scale from 'd3-scale';
@@ -18,6 +21,10 @@ import { RiskData, AvgScoreData } from '../data';
 })
 export class CircleComponent implements OnInit {
 
+    private subscription: Subscription;
+    value: any;
+    AvgSaftey: any;
+
     private width: number;
     private height: number;
 
@@ -34,13 +41,25 @@ export class CircleComponent implements OnInit {
     private h: any;
 
 
-    constructor() {
-    }
+
+    constructor ( private commonService: CommonService ) {
+        const value = this.value ? this.value : "alltime";
+        this.AvgSaftey = AvgScoreData[value];
+
+  }
+
 
     ngOnInit() {
         this.initSvg();
         this.riskChart(RISK_DATA);
-        this.avgScoreChart(AVERAGE_SCORE_DATA);
+        const self = this;
+        this.subscription = this.commonService.notifyObservable$.subscribe((res) => {
+          if (res.hasOwnProperty('option') && res.option === 'onSubmit') {
+            self.AvgSaftey = AvgScoreData[res.value];
+          }
+          console.log("dataCircle", this.AvgSaftey);
+          this.avgScoreChart(this.AvgSaftey);
+        });
     }
     
 
@@ -119,30 +138,34 @@ export class CircleComponent implements OnInit {
 
         // Average saftery score value
 
-        h.append("text")
-            .attr("fill", "#ffffff")
-            .text(function(d) { return AVERAGE_SCORE_DATA[0].value + " %"; })
-            .style("text-anchor", "middle");
+        // h.append("text")
+        //     .attr("fill", "#ffffff")
+        //     .text(function(d) { return this.AvgSaftey + " %"; })
+        //     .style("text-anchor", "middle");
 
-        // Dynamically change the text of Average Saftery Score
+        // // Dynamically change the text of Average Saftery Score
 
-        h.append("text")
-            .attr("fill", "#ffffff")
-            .text(function(d) { if (AVERAGE_SCORE_DATA[0].value> 66) return 'Low Risk'; })
-            .attr("x", this.radius - 160)
-            .attr("y", this.radius - 100);
+        // h.append("text")
+        //     .attr("fill", "#ffffff")
+        //     .text(function(d) { if (this.AvgSaftey> 66) return 'Low Risk'; })
+        //     .attr("x", this.radius - 160)
+        //     .attr("y", this.radius - 100);
 
-        h.append("text")
-            .attr("fill", "#ffffff")
-            .text(function(d) { if (AVERAGE_SCORE_DATA[0].value> 33 && AVERAGE_SCORE_DATA[0].value< 67 ) return 'Medium Risk'; })
-            .attr("x", this.radius - 160)
-            .attr("y", this.radius - 100);
+        // h.append("text")
+        //     .attr("fill", "#ffffff")
+        //     .text(function(d) { if (this.AvgSaftey> 33 && this.AvgSaftey< 67 ) return 'Medium Risk'; })
+        //     .attr("x", this.radius - 160)
+        //     .attr("y", this.radius - 100);
 
-        h.append("text")
-            .attr("fill", "#ffffff")
-            .text(function(d) { if (AVERAGE_SCORE_DATA[0].value< 34 ) return 'High Risk'; })
-            .attr("x", this.radius - 160)
-            .attr("y", this.radius - 100);
+        // h.append("text")
+        //     .attr("fill", "#ffffff")
+        //     .text(function(d) { if (this.AvgSaftey< 34 ) return 'High Risk'; })
+        //     .attr("x", this.radius - 160)
+        //     .attr("y", this.radius - 100);
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
 }
