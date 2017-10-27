@@ -9,18 +9,19 @@ import * as d3Shape from 'd3-shape';
 
 import { RiskData, AvgScoreData } from '../data';
 
-// console.log("data",AvgScoreData['today'])
-
 @Component({
     selector: 'app-circle',
     template: `
-      <svg width="340" height="250"></svg>
+      <div id="svg-pie">
+        <svg width="340" height="250"></svg>
+      </div>
     `
 })
+
 export class CircleComponent implements OnInit {
 
     private subscription: Subscription;
-    value: any;
+    period: any;
     AvgSaftey: any;
 
     private width: number;
@@ -39,42 +40,41 @@ export class CircleComponent implements OnInit {
     private h: any;
 
 
-
-    // constructor ( private commonService: CommonService ) {
-    //     const value = this.value ? this.value : "alltime";
-    //     this.AvgSaftey = AvgScoreData[value];
-    //     console.log("datavalueconst", this.AvgSaftey);
-    // }
-
-    constructor (){
-        
+    constructor ( private commonService: CommonService ) {
+      // period defaults to 'alltime'
+      this.period = this.period ? this.period : "alltime";
+      this.AvgSaftey = AvgScoreData[this.period];
     }
-
 
     ngOnInit() {
+        // create the chart
         this.initSvg();
         this.riskChart(RiskData);
-
         this.avgScoreChart(AvgScoreData['alltime']);
 
-        // const self = this;
-        // this.subscription = this.commonService.notifyObservable$.subscribe((res) => {
-        //   if (res.hasOwnProperty('option') && res.option === 'onSubmit') {
-        //     self.AvgSaftey = AvgScoreData[res.value];
-        //     this.avgScoreChart(this.AvgSaftey);
-        //     console.log("datavaluesubs", this.AvgSaftey[0]);
+        const self = this;
+        this.subscription = this.commonService.notifyObservable$.subscribe((res) => {
+           if (res.hasOwnProperty('option') && res.option === 'onSubmit') {
+             self.period = res.value;
+             self.AvgSaftey = AvgScoreData[res.value];
 
-        //   }
-        // });
+             // draw a new svg over the previous one
+             self.svg.remove();
+
+             // Redraw the chart
+             self.initSvg();
+             self.riskChart(RiskData);
+             self.avgScoreChart(self.AvgSaftey);
+           }
+         });
     }
-    
-    // ngOnDestroy() {
-    //     this.subscription.unsubscribe();
-    // }
 
+    ngOnDestroy() {
+      this.subscription.unsubscribe();
+    }
 
     private initSvg() {
-        this.svg = d3.select('svg');
+        this.svg = d3.select('#svg-pie').select('svg');
 
         this.width = +this.svg.attr('width');
         this.height = +this.svg.attr('height');
@@ -101,7 +101,7 @@ export class CircleComponent implements OnInit {
             .padAngle(.007)
             .value((d: any) => d.value);
 
-        this.svg = d3.select("svg")
+        this.svg = d3.select('#svg-pie').select('svg')
             .append("g")
             .attr("transform", "translate(" + this.width / 2 + "," + this.height / 2 + ")");
     }
@@ -147,33 +147,32 @@ export class CircleComponent implements OnInit {
 
 
         // Average saftery score value
+        const value = AvgScoreData[this.period][0].value;
+
+        var vText;
+        switch (true) {
+           case value >= 66:
+             vText = 'Low Risk';
+             break;
+
+           case  value >= 33:
+             vText = 'Medium Risk';
+             break;
+
+          case value < 33:
+             vText = 'High Risk';
+             break;
+        }
 
         h.append("text")
             .attr("fill", "#ffffff")
-            .text(function(d) { return (AvgScoreData['alltime'][0].value)+ " %"; })
+            .text(function(d) { return value + " %"; })
             .style("text-anchor", "middle");
 
-        // Dynamically change the text of Average Saftery Score
-
         h.append("text")
             .attr("fill", "#ffffff")
-            .text(function(d) { if (AvgScoreData['alltime'][0].value> 66) return 'Low Risk'; })
-            .attr("x", this.radius - 160)
-            .attr("y", this.radius - 100);
-
-        h.append("text")
-            .attr("fill", "#ffffff")
-            .text(function(d) { if (AvgScoreData['alltime'][0].value> 33 && AvgScoreData['alltime'][0].value< 67 ) return 'Medium Risk'; })
-            .attr("x", this.radius - 160)
-            .attr("y", this.radius - 100);
-
-        h.append("text")
-            .attr("fill", "#ffffff")
-            .text(function(d) { if (AvgScoreData['alltime'][0].value< 34 ) return 'High Risk'; })
+            .text(vText)
             .attr("x", this.radius - 160)
             .attr("y", this.radius - 100);
     }
-
-
 }
-
