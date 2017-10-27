@@ -7,8 +7,6 @@ import * as d3 from 'd3-selection';
 import * as d3Scale from 'd3-scale';
 import * as d3Shape from 'd3-shape';
 
-import { RISK_DATA, AVERAGE_SCORE_DATA } from './data';
-
 import { RiskData, AvgScoreData } from '../data';
 
 // console.log("data",Avg_Score_Data['alltime'][0]['value'])
@@ -51,14 +49,16 @@ export class CircleComponent implements OnInit {
 
     ngOnInit() {
         this.initSvg();
-        this.riskChart(RISK_DATA);
+        this.riskChart(RiskData);
         const self = this;
         this.subscription = this.commonService.notifyObservable$.subscribe((res) => {
           if (res.hasOwnProperty('option') && res.option === 'onSubmit') {
             self.AvgSaftey = AvgScoreData[res.value];
+            console.log("dataCircle", this.AvgSaftey);
+            this.avgScoreChart(this.AvgSaftey);
           }
-          console.log("dataCircle", this.AvgSaftey);
-          this.avgScoreChart(this.AvgSaftey);
+
+
         });
     }
     
