@@ -6,6 +6,9 @@ import * as d3Shape from 'd3-shape';
 
 import { RISK_DATA, AVERAGE_SCORE_DATA } from './data';
 
+import { RiskData, AvgScoreData } from '../data';
+
+// console.log("data",Avg_Score_Data['alltime'][0]['value'])
 
 @Component({
     selector: 'app-circle',
