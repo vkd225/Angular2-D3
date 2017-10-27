@@ -1,8 +1,11 @@
 # Angular2-D3-UI
 A UI Component based on Angular 2 and D3
 
-npm install 
-npm start
+#Get Started npm install 
+Type npm install to install dependencies. 
+
+npm start 
+Type npm start to start development in your default browser.
 
 open http://localhost:4200/
 
