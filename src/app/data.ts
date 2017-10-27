@@ -6,6 +6,7 @@ export const RiskData: any[] = [
     {risk: 'Low Risk', value: 100}
 ];
 
+
 export var AvgScoreData = {
   alltime:[
     {score: 'Avg. Saftey Score', value: 80},

@@ -38,5 +38,3 @@ export class LegendComponent implements OnInit {
     return "M 0, 0 H " + val;
   }
 }
-
-

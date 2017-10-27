@@ -9,7 +9,7 @@ import * as d3Shape from 'd3-shape';
 
 import { RiskData, AvgScoreData } from '../data';
 
-// console.log("data",Avg_Score_Data['alltime'][0]['value'])
+// console.log("data",AvgScoreData['today'])
 
 @Component({
     selector: 'app-circle',
@@ -40,28 +40,37 @@ export class CircleComponent implements OnInit {
 
 
 
-    constructor ( private commonService: CommonService ) {
-        const value = this.value ? this.value : "alltime";
-        this.AvgSaftey = AvgScoreData[value];
+    // constructor ( private commonService: CommonService ) {
+    //     const value = this.value ? this.value : "alltime";
+    //     this.AvgSaftey = AvgScoreData[value];
+    //     console.log("datavalueconst", this.AvgSaftey);
+    // }
 
-  }
+    constructor (){
+        
+    }
 
 
     ngOnInit() {
         this.initSvg();
         this.riskChart(RiskData);
-        const self = this;
-        this.subscription = this.commonService.notifyObservable$.subscribe((res) => {
-          if (res.hasOwnProperty('option') && res.option === 'onSubmit') {
-            self.AvgSaftey = AvgScoreData[res.value];
-            console.log("dataCircle", this.AvgSaftey);
-            this.avgScoreChart(this.AvgSaftey);
-          }
 
+        this.avgScoreChart(AvgScoreData['alltime']);
 
-        });
+        // const self = this;
+        // this.subscription = this.commonService.notifyObservable$.subscribe((res) => {
+        //   if (res.hasOwnProperty('option') && res.option === 'onSubmit') {
+        //     self.AvgSaftey = AvgScoreData[res.value];
+        //     this.avgScoreChart(this.AvgSaftey);
+        //     console.log("datavaluesubs", this.AvgSaftey[0]);
+
+        //   }
+        // });
     }
     
+    // ngOnDestroy() {
+    //     this.subscription.unsubscribe();
+    // }
 
 
     private initSvg() {
@@ -136,37 +145,35 @@ export class CircleComponent implements OnInit {
             .attr("x", this.radius - 180)
             .attr("y", this.radius - 150);
 
+
         // Average saftery score value
 
-        // h.append("text")
-        //     .attr("fill", "#ffffff")
-        //     .text(function(d) { return this.AvgSaftey + " %"; })
-        //     .style("text-anchor", "middle");
+        h.append("text")
+            .attr("fill", "#ffffff")
+            .text(function(d) { return (AvgScoreData['alltime'][0].value)+ " %"; })
+            .style("text-anchor", "middle");
 
-        // // Dynamically change the text of Average Saftery Score
+        // Dynamically change the text of Average Saftery Score
 
-        // h.append("text")
-        //     .attr("fill", "#ffffff")
-        //     .text(function(d) { if (this.AvgSaftey> 66) return 'Low Risk'; })
-        //     .attr("x", this.radius - 160)
-        //     .attr("y", this.radius - 100);
+        h.append("text")
+            .attr("fill", "#ffffff")
+            .text(function(d) { if (AvgScoreData['alltime'][0].value> 66) return 'Low Risk'; })
+            .attr("x", this.radius - 160)
+            .attr("y", this.radius - 100);
 
-        // h.append("text")
-        //     .attr("fill", "#ffffff")
-        //     .text(function(d) { if (this.AvgSaftey> 33 && this.AvgSaftey< 67 ) return 'Medium Risk'; })
-        //     .attr("x", this.radius - 160)
-        //     .attr("y", this.radius - 100);
+        h.append("text")
+            .attr("fill", "#ffffff")
+            .text(function(d) { if (AvgScoreData['alltime'][0].value> 33 && AvgScoreData['alltime'][0].value< 67 ) return 'Medium Risk'; })
+            .attr("x", this.radius - 160)
+            .attr("y", this.radius - 100);
 
-        // h.append("text")
-        //     .attr("fill", "#ffffff")
-        //     .text(function(d) { if (this.AvgSaftey< 34 ) return 'High Risk'; })
-        //     .attr("x", this.radius - 160)
-        //     .attr("y", this.radius - 100);
+        h.append("text")
+            .attr("fill", "#ffffff")
+            .text(function(d) { if (AvgScoreData['alltime'][0].value< 34 ) return 'High Risk'; })
+            .attr("x", this.radius - 160)
+            .attr("y", this.radius - 100);
     }
 
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
 
 }
 
