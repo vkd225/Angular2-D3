@@ -43,3 +43,7 @@
   font-size: 14px;
   margin-right: 10px;
 }
+
+.factors path {
+  transition: d 0.4s ease;
+}

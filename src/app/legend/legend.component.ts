@@ -1,16 +1,6 @@
-
 import { Component, OnInit, Output, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-
 import { CommonService } from '../common.service';
-
-
-import * as d3 from 'd3-selection';
-import * as d3Scale from 'd3-scale';
-import * as d3Shape from 'd3-shape';
-
-
-// import { FACTORS } from './data';
 
 import { FactorsData } from  '../data';
 
@@ -20,31 +10,28 @@ import { FactorsData } from  '../data';
   styleUrls: ['./legend.component.css'],
 })
 
-export class LegendComponent implements OnInit{
+export class LegendComponent implements OnInit {
 
-  FACTORS: any;
+  private subscription: Subscription;
   value: any;
+  FACTORS: any;
 
-
-
-  // constructor() {
-  //   this.FACTORS = FactorsData['last_year'];
-  // }
-
-
-  ngOnInit() {       
+  constructor ( private commonService: CommonService ) {
+    const value = this.value ? this.value : "alltime";
+    this.FACTORS = FactorsData[value];
   }
 
-  onSubmit(){
-    // this method needs to be called when user click on submit button from header
-    this.commonService.notifyOther({option: 'onSubmit', value: 'From header'});
-    console.log("value",this.value);
+  ngOnInit() {
+    const self = this;
+    this.subscription = this.commonService.notifyObservable$.subscribe((res) => {
+      if (res.hasOwnProperty('option') && res.option === 'onSubmit') {
+        self.FACTORS = FactorsData[res.value];
+      }
+    });
   }
 
-
-
-  constructor ( private commonService: CommonService ){
-    this.FACTORS = FactorsData[this.value];
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   getPathValue(val) {

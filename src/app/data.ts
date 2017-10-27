@@ -6,11 +6,6 @@ export const RiskData: any[] = [
     {risk: 'Low Risk', value: 100}
 ];
 
-// export const AVERAGE_SCORE_DATA: any[] = [
-//     {score: 'Avg. Saftey Score', value: 81.6},
-//     {score: 'Remaining Score', value: 18.4}
-// ];
-
 export var AvgScoreData = {
   alltime:[
     {score: 'Avg. Saftey Score', value: 80},
@@ -89,19 +84,6 @@ export var FactorsData = {
   ]
 
 }
-
-// export interface Factor {
-//   name: string,
-//   value: number
-// }
-
-// export const FACTORS: Factor[] = [
-//   {name: "Avg. max lateral velocity", value: 89.4},
-//   {name: "Avg. Max Flexion", value: 92.2},
-//   {name: "Avg. Twist Velocity", value: 100.2},
-//   {name: "Max. Moment", value: 33.1},
-//   {name: "Lift Rate", value: 56.4}
-// ];
 
 
 
